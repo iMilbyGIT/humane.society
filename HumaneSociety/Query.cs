@@ -162,32 +162,58 @@ namespace HumaneSociety
 
 
         //// TODO Items: ////
-        
+        // CRUD - create(insert), read(select), update, delete
         // TODO: Allow any of the CRUD operations to occur here
         internal static void RunEmployeeQueries(Employee employee, string crudOperation)
         {
-            throw new NotImplementedException();
+            crudOperation = Console.WriteLine("Would you like to create, read, update, or delete an employee?");
+            switch (crudOperation)
+            {
+                case "create":
+                db.Employees.
+                
+                break;
+                case "read":
+                
+                
+                break;
+                case "update":
+                
+                
+                break;
+                case "delete":
+                
+                
+                break;
+                default:
+                UserInterface.DisplayUserOptions("Input not accepted please select create, read, update, or delete.");
+                break;
+            }
         }
 
         // TODO: Animal CRUD Operations
         internal static void AddAnimal(Animal animal)
         {
-            throw new NotImplementedException();
+            db.Animals.InsertOnSubmit(animal);
+            db.SubmitChanges();
         }
 
         internal static Animal GetAnimalByID(int id)
         {
             throw new NotImplementedException();
+            //    db.Animals.GetType(int)
         }
 
         internal static void UpdateAnimal(int animalId, Dictionary<int, string> updates)
-        {            
+        {
             throw new NotImplementedException();
+            //    db.Animals.
         }
 
         internal static void RemoveAnimal(Animal animal)
         {
-            throw new NotImplementedException();
+            db.Animals.DeleteOnSubmit(animal);
+            db.SubmitChanges();
         }
         
         // TODO: Animal Multi-Trait Search
