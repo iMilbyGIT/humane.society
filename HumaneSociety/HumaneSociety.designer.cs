@@ -22,7 +22,7 @@ namespace HumaneSociety
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name= "HumaneSociety.Properties.Settings.HumaneSocietyConnectionString4")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="HumaneSociety")]
 	public partial class HumaneSocietyDataContext : System.Data.Linq.DataContext
 	{
 		
