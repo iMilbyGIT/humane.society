@@ -166,15 +166,15 @@ namespace HumaneSociety
         // TODO: Allow any of the CRUD operations to occur here
         internal static void RunEmployeeQueries(Employee employee, string crudOperation)
         {
-            crudOperation = Console.WriteLine("Would you like to create, read, update, or delete an employee?");
             switch (crudOperation)
             {
                 case "create":
-                db.Employees.
-                
+                db.Employees.InsertOnSubmit(employee);
+                db.SubmitChanges();
+
                 break;
                 case "read":
-                
+
                 
                 break;
                 case "update":
@@ -182,8 +182,9 @@ namespace HumaneSociety
                 
                 break;
                 case "delete":
-                
-                
+                db.Employees.DeleteOnSubmit(employee);
+                db.SubmitChanges();
+
                 break;
                 default:
                 UserInterface.DisplayUserOptions("Input not accepted please select create, read, update, or delete.");
@@ -201,13 +202,12 @@ namespace HumaneSociety
         internal static Animal GetAnimalByID(int id)
         {
             throw new NotImplementedException();
-            //    db.Animals.GetType(int)
+            //    db.Animals.Get(id)
         }
 
         internal static void UpdateAnimal(int animalId, Dictionary<int, string> updates)
         {
             throw new NotImplementedException();
-            //    db.Animals.
         }
 
         internal static void RemoveAnimal(Animal animal)
@@ -215,7 +215,7 @@ namespace HumaneSociety
             db.Animals.DeleteOnSubmit(animal);
             db.SubmitChanges();
         }
-        
+
         // TODO: Animal Multi-Trait Search
         internal static IQueryable<Animal> SearchForAnimalsByMultipleTraits(Dictionary<int, string> updates) // parameter(s)?
         {
@@ -225,18 +225,20 @@ namespace HumaneSociety
         // TODO: Misc Animal Things
         internal static int GetCategoryId(string categoryName)
         {
-            var somt = db.Categories.First();
-            return 5;
+            Category category = db.Categories.Where(c => c.Name == categoryName).FirstOrDefault();
+            return category.CategoryId;
         }
         
         internal static Room GetRoom(int animalId)
         {
-            throw new NotImplementedException();
+            var rooms = db.Rooms.Where(r => r.AnimalId == animalId).FirstOrDefault();
+            return rooms;
         }
         
         internal static int GetDietPlanId(string dietPlanName)
         {
-            throw new NotImplementedException();
+            DietPlan dietPlan = db.DietPlans.Where(d => d.Name == dietPlanName).FirstOrDefault();
+            return dietPlan.DietPlanId;
         }
 
         // TODO: Adoption CRUD Operations
