@@ -199,13 +199,46 @@ namespace HumaneSociety
 
         internal static Animal GetAnimalByID(int id)
         {
-            throw new NotImplementedException();
-            //    db.Animals.Get(id)
+            var animals = db.Animals.Where(r => r.AnimalId == id).FirstOrDefault();
+            return animals;
         }
 
         internal static void UpdateAnimal(int animalId, Dictionary<int, string> updates)
         {
-            throw new NotImplementedException();
+            Animal animal = GetAnimalByID(animalId);
+            foreach (KeyValuePair<int,string> item in updates)
+            {
+                switch (item.Key)
+                {
+                    case 1:
+                    int cateID = db.Categories.Where(s => s.Name == item.Value).Single().CategoryId;
+                    animal.CategoryId = cateID;
+                    break;
+                    case 2:
+                    animal.Name = item.Value;
+                    break;
+                    case 3:
+                    animal.Age = Int32.Parse(item.Value);
+                    //db.Animals.Where(a => a.Age == );
+                    break;
+                    case 4:
+                    animal.Demeanor = item.Value;
+                    //db.Animals.Where(d => d.Demeanor == );
+                    break;
+                    case 5:
+                    animal.KidFriendly = item.Value;
+                    //db.Animals.Where(kf => kf.KidFriendly == );
+                    break;
+                    case 6:
+                    animal.PetFriendly = item.Value;
+                    //db.Animals.Where(pf => pf.PetFriendly == );
+                    break;
+                    case 8:
+                    animal.Weight = Int32.Parse(item.Value);
+                    //db.Animals.Where(w => w.Weight == );
+                    break;
+                }
+            }
         }
 
         internal static void RemoveAnimal(Animal animal)
@@ -217,9 +250,43 @@ namespace HumaneSociety
         // TODO: Animal Multi-Trait Search
         internal static IQueryable<Animal> SearchForAnimalsByMultipleTraits(Dictionary<int, string> updates) // parameter(s)?
         {
-            throw new NotImplementedException();
+            IQueryable<Animal> results = db.Animals;
+            foreach (KeyValuePair<int, string> traits in updates)
+            {
+                switch (traits.Key)
+                {
+                    case 1:
+                    results = results.Where(a => a.Category.Name == traits.Value);
+                    break;
+                    case 2:
+                    results = results.Where(a => a.Name == traits.Value);
+                    break;
+                    case 3:
+                    results = results.Where(a => a.Category.Name == traits.Value);
+                    break;
+                    case 4:
+                    results = results.Where(a => a.Category.Name == traits.Value);
+                    break;
+                    case 5:
+                    results = results.Where(a => a.Category.Name == traits.Value);
+                    break;
+                    case 6:
+                    results = results.Where(a => a.Category.Name == traits.Value);
+                    break;
+                    case 7:
+                    results = results.Where(a => a.Category.Name == traits.Value);
+                    break;
+                    case 8:
+                    results = results.Where(a => a.Category.Name == traits.Value);
+                    break;
+                    default:
+                    results = results.Where(a => a.Category.Name == traits.Value);
+                    break;
+                }
+            }
+            return results;
         }
-         
+
         // TODO: Misc Animal Things
         internal static int GetCategoryId(string categoryName)
         {

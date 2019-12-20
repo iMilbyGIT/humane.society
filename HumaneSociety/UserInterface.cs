@@ -148,6 +148,7 @@ namespace HumaneSociety
             {
                 return "no";
             }
+            BoolToYesNo(GetBitData());
         }
 
         public static bool GetBitData(string option)
