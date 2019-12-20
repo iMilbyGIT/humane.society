@@ -178,13 +178,83 @@ namespace HumaneSociety
                 Console.ReadLine();
                 break;
                 case "update":
-                
-                
+                employeeTraits = db.Employees.Where(a => a.EmployeeNumber == employee.EmployeeNumber).First();
+                GetUpdates(employeeTraits);
+
                 break;
                 case "delete":
                 db.Employees.DeleteOnSubmit(employee);
                 db.SubmitChanges();
                 break;
+            }
+        }
+        internal static void GetUpdates(Employee employee)
+        {
+            List<string> updtes = new List<string>();
+            UserInterface.DisplayUserOptions("What would you like to update use spaces!!");
+            
+            List<string> options = new List<string>() {"First Name ", "Last Name ", "User Name ", "Password ", "Employee Number ", "Email " };
+            UserInterface.DisplayUserOptions(options);
+
+            bool stillChosing = true;
+            while (stillChosing == true)
+            {
+                updtes.Add(Console.ReadLine());
+                Console.WriteLine("Want to continue? y/n");
+                string answer = Console.ReadLine();
+                if(answer == "n")
+                {
+                    stillChosing = false;
+                }
+            }
+            ApplyUpdates(updtes, employee);
+            
+        }
+        public static void ApplyUpdates(List<string> updates, Employee employee )
+        {
+            foreach(string update in updates)
+            {
+                switch (update)
+                {
+                    case "First name":
+                    Console.WriteLine("What do you want to change the First Name to?");
+                    employee.FirstName = Console.ReadLine();
+                    db.SubmitChanges();
+                    break;
+
+                    case "Last Name":
+                    Console.WriteLine("What do you want to change the Last Name to?");
+                    employee.LastName = Console.ReadLine();
+                    db.SubmitChanges();
+                    break;
+                  
+                    case "User Name":
+                    Console.WriteLine("What do you want to change the User Name to?");
+                    employee.UserName = Console.ReadLine();
+                    db.SubmitChanges();
+                    break;
+
+                    case "Password":
+                    Console.WriteLine("What do you want to change the Password to?");
+                    employee.Password = Console.ReadLine();
+                    db.SubmitChanges();
+                    break;
+
+                    case "Employee Number":
+                    Console.WriteLine("What do you want to change the Employee Number to?");
+                    employee.EmployeeNumber = Int32.Parse(Console.ReadLine());
+                    db.SubmitChanges();
+                    break;
+
+                    case "Email":
+                    Console.WriteLine("What do you want to change the Email to?");
+                    employee.Email = Console.ReadLine();
+                    db.SubmitChanges();
+                    break;
+
+                    default:
+                    break;
+                }
             }
         }
         // TODO: Animal CRUD Operations
