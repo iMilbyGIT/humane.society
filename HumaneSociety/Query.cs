@@ -240,16 +240,16 @@ namespace HumaneSociety
         // TODO: Animal Multi-Trait Search
         internal static IQueryable<Animal> SearchForAnimalsByMultipleTraits(Dictionary<int, string> updates) // parameter(s)?
         {
-            IQueryable<Animal> results = db.Animals;
+            var results = db.Animals.Select(a=>a);
             foreach (KeyValuePair<int, string> traits in updates)
             {
                 switch (traits.Key)
                 {
                     case 1:
-                    results = results.Where(a => a.Category.Name == traits.Value);
+                    results = results.Where(a => a.Category.Name == traits.Value).Select(a=>a);
                     break;
                     case 2:
-                    results = results.Where(a => a.Name == traits.Value);
+                    results = results.Where(a => a.Name == traits.Value).Select(a=>a);
                     break;
                     case 3:
                     results = results.Where(a => a.Category.Name == traits.Value);
