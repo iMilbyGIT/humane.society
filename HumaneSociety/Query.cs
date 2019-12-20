@@ -159,8 +159,6 @@ namespace HumaneSociety
 
             return employeeWithUserName == null;
         }
-
-
         //// TODO Items: ////
         // CRUD - create(insert), read(select), update, delete
         // TODO: Allow any of the CRUD operations to occur here
@@ -189,20 +187,17 @@ namespace HumaneSociety
                 break;
             }
         }
-
         // TODO: Animal CRUD Operations
         internal static void AddAnimal(Animal animal)
         {
             db.Animals.InsertOnSubmit(animal);
             db.SubmitChanges();
         }
-
         internal static Animal GetAnimalByID(int id)
         {
             var animals = db.Animals.Where(r => r.AnimalId == id).FirstOrDefault();
             return animals;
         }
-
         internal static void UpdateAnimal(int animalId, Dictionary<int, string> updates)
         {
             Animal animal = GetAnimalByID(animalId);
@@ -219,23 +214,18 @@ namespace HumaneSociety
                     break;
                     case 3:
                     animal.Age = Int32.Parse(item.Value);
-                    //db.Animals.Where(a => a.Age == );
                     break;
                     case 4:
                     animal.Demeanor = item.Value;
-                    //db.Animals.Where(d => d.Demeanor == );
                     break;
                     case 5:
-                    animal.KidFriendly = item.Value;
-                    //db.Animals.Where(kf => kf.KidFriendly == );
+                    animal.KidFriendly = bool.Parse(item.Value);
                     break;
                     case 6:
-                    animal.PetFriendly = item.Value;
-                    //db.Animals.Where(pf => pf.PetFriendly == );
+                    animal.PetFriendly = bool.Parse(item.Value);
                     break;
                     case 8:
                     animal.Weight = Int32.Parse(item.Value);
-                    //db.Animals.Where(w => w.Weight == );
                     break;
                 }
             }
