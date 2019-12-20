@@ -170,9 +170,12 @@ namespace HumaneSociety
                 db.Employees.InsertOnSubmit(employee);
                 db.SubmitChanges();
                 break;
-                case "read":
-
-                
+                case "read":                
+                var employeeTraits = db.Employees.Where(a => a.EmployeeNumber == employee.EmployeeNumber).First();
+                Console.WriteLine("Employee ID " + employeeTraits.EmployeeId + ' ' + "Employee Number " + employee.EmployeeNumber);
+                List<string> listOfTraits = new List<string>() { employeeTraits.FirstName, employeeTraits.LastName, employeeTraits.UserName, employeeTraits.Password, employeeTraits.Email };
+                UserInterface.DisplayUserOptions(listOfTraits);
+                Console.ReadLine();
                 break;
                 case "update":
                 
@@ -181,9 +184,6 @@ namespace HumaneSociety
                 case "delete":
                 db.Employees.DeleteOnSubmit(employee);
                 db.SubmitChanges();
-                break;
-                default:
-                UserInterface.DisplayUserOptions("Input not accepted please select create, read, update, or delete.");
                 break;
             }
         }
@@ -206,26 +206,33 @@ namespace HumaneSociety
                 switch (item.Key)
                 {
                     case 1:
-                    int cateID = db.Categories.Where(s => s.Name == item.Value).Single().CategoryId;
+                    int cateID = db.Categories.Where(s => s.Name == item.Value).Single().CategoryId;                    
                     animal.CategoryId = cateID;
+                    db.SubmitChanges();
                     break;
                     case 2:
                     animal.Name = item.Value;
+                    db.SubmitChanges();
                     break;
                     case 3:
                     animal.Age = Int32.Parse(item.Value);
+                    db.SubmitChanges();
                     break;
                     case 4:
                     animal.Demeanor = item.Value;
+                    db.SubmitChanges();
                     break;
                     case 5:
                     animal.KidFriendly = bool.Parse(item.Value);
+                    db.SubmitChanges();
                     break;
                     case 6:
                     animal.PetFriendly = bool.Parse(item.Value);
+                    db.SubmitChanges();
                     break;
                     case 8:
                     animal.Weight = Int32.Parse(item.Value);
+                    db.SubmitChanges();
                     break;
                 }
             }
@@ -252,25 +259,24 @@ namespace HumaneSociety
                     results = results.Where(a => a.Name == traits.Value).Select(a=>a);
                     break;
                     case 3:
-                    results = results.Where(a => a.Category.Name == traits.Value);
+                    results = results.Where(a => a.Age == Int32.Parse(traits.Value));
                     break;
                     case 4:
-                    results = results.Where(a => a.Category.Name == traits.Value);
+                    results = results.Where(a => a.Demeanor == traits.Value);
                     break;
                     case 5:
-                    results = results.Where(a => a.Category.Name == traits.Value);
+                    results = results.Where(a => a.KidFriendly == bool.Parse(traits.Value));
                     break;
                     case 6:
-                    results = results.Where(a => a.Category.Name == traits.Value);
+                    results = results.Where(a => a.PetFriendly == bool.Parse(traits.Value));
                     break;
                     case 7:
-                    results = results.Where(a => a.Category.Name == traits.Value);
+                    results = results.Where(a => a.Weight == Int32.Parse(traits.Value));
                     break;
                     case 8:
-                    results = results.Where(a => a.Category.Name == traits.Value);
+                    results = results.Where(a => a.AnimalId == Int32.Parse(traits.Value));
                     break;
                     default:
-                    results = results.Where(a => a.Category.Name == traits.Value);
                     break;
                 }
             }
