@@ -171,7 +171,6 @@ namespace HumaneSociety
                 case "create":
                 db.Employees.InsertOnSubmit(employee);
                 db.SubmitChanges();
-
                 break;
                 case "read":
 
@@ -184,7 +183,6 @@ namespace HumaneSociety
                 case "delete":
                 db.Employees.DeleteOnSubmit(employee);
                 db.SubmitChanges();
-
                 break;
                 default:
                 UserInterface.DisplayUserOptions("Input not accepted please select create, read, update, or delete.");
