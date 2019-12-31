@@ -375,12 +375,40 @@ namespace HumaneSociety
         // TODO: Adoption CRUD Operations
         internal static void Adopt(Animal animal, Client client)
         {
-            throw new NotImplementedException();
+            UserInterface.DisplayUserOptions("Who will be adopting today?");
+            DisplayAllCustomers();
+            UserInterface.DisplayUserOptions("Enter client Id");
+            int id = Int32.Parse(Console.ReadLine());
+            Client personAdopting = db.Clients.Where(c => c.ClientId == id).FirstOrDefault();
+            //add clientId to the Adoptions table
+            Console.Clear();
+
+            UserInterface.DisplayUserOptions("What animal is being requested?");
+            DisplayAnimals();
+            UserInterface.DisplayUserOptions("Enter animal Id");
+            int animalId = Int32.Parse(Console.ReadLine());
+            Animal animalBeingAdopted = GetAnimalByID(animalId);
+            //add animalId to same table
+            Console.Clear();
+
+            UserInterface.DisplayUserOptions("What is the adoption status (Approved, UnApproved or Pending)");
+            string status = Console.ReadLine();
+            //add status to table
+
+            UserInterface.DisplayUserOptions("What is the adoption fee");
+            int fee = Int32.Parse(Console.ReadLine());
+            //add fee
+
+            UserInterface.DisplayUserOptions("Has this adoption been paid for? (yes or no)");
+            string yesorno = Console.ReadLine();
+            bool payStatus = UserInterface.GetBitData(yesorno);
+            //add status to table
         }
 
         internal static IQueryable<Adoption> GetPendingAdoptions()
         {
-            throw new NotImplementedException();
+            IQueryable<Adoption> adoptions = db.Adoptions.Where(a => a.ApprovalStatus == "Pending");
+            return adoptions;
         }
 
         internal static void UpdateAdoption(bool isAdopted, Adoption adoption)
