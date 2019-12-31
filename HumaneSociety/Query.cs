@@ -216,7 +216,7 @@ namespace HumaneSociety
             {
                 switch (update)
                 {
-                    case "First name":
+                    case "First Name":
                     Console.WriteLine("What do you want to change the First Name to?");
                     employee.FirstName = Console.ReadLine();
                     db.SubmitChanges();
@@ -401,7 +401,27 @@ namespace HumaneSociety
 
         internal static void UpdateShot(string shotName, Animal animal)
         {
-            throw new NotImplementedException();
+            var updates = UserInterface.GetAnimalSearchCriteria();
+            var animals = Query.SearchForAnimalsByMultipleTraits(updates).ToList();
+
+            while (animals.Count !=1)
+            {
+                Console.Clear();
+                Console.WriteLine("You have to return a single animal");
+                updates = UserInterface.GetAnimalSearchCriteria();
+                animals = Query.SearchForAnimalsByMultipleTraits(updates).ToList();
+            }
+            Animal pet = animals[0];
+            List<Shot> Shots = db.Shots.ToList();
+            UserInterface.DisplayUserOptions("What shot do you need for this animal? (Enter shot name)");
+            foreach (Shot shot in Shots)
+            {
+                UserInterface.DisplayUserOptions(shot.Name);
+            }
+            string answer = Console.ReadLine();
+            Shot shotToUse = db.Shots.Where(s => s.Name == answer).FirstOrDefault();
+            Console.Clear();
+            UserInterface.DisplayUserOptions("Do you want to give " + pet.Name + " the " + shotToUse.Name + " shot ");
         }
     }
 }
