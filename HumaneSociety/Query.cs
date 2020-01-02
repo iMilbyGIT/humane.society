@@ -183,6 +183,7 @@ namespace HumaneSociety
 
                 break;
                 case "delete":
+                employee = db.Employees.Where(e => e.LastName == employee.LastName && e.EmployeeNumber == employee.EmployeeNumber).SingleOrDefault();
                 db.Employees.DeleteOnSubmit(employee);
                 db.SubmitChanges();
                 break;
@@ -265,8 +266,9 @@ namespace HumaneSociety
         }
         internal static Animal GetAnimalByID(int id)
         {
-            var animals = db.Animals.Where(r => r.AnimalId == id).FirstOrDefault();
-            return animals;
+            Animal result = new Animal();
+            result = db.Animals.Where(a => a.AnimalId == id).FirstOrDefault();
+            return result;
         }
         internal static void UpdateAnimal(int animalId, Dictionary<int, string> updates)
         {
@@ -413,7 +415,26 @@ namespace HumaneSociety
 
         internal static void UpdateAdoption(bool isAdopted, Adoption adoption)
         {
-            throw new NotImplementedException();
+            var requiredData =
+             (from y in db.Adoptions
+              where y.ClientId == adoption.ClientId
+              select y).First();
+            var animal =
+                (from z in db.Animals
+                 where z.AnimalId == adoption.AnimalId
+                 select z).First();
+            if (isAdopted)
+            {
+                requiredData.ApprovalStatus = "Approved";
+                animal.AdoptionStatus = "Adopted";
+            }
+            else
+            {
+                requiredData.ApprovalStatus = "Denied";
+                animal.AdoptionStatus = "Animal is available for a different applicant.";
+            }
+
+            db.SubmitChanges();
         }
 
         internal static void RemoveAdoption(int animalId, int clientId)
