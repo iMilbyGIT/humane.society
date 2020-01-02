@@ -457,8 +457,8 @@ namespace HumaneSociety
 
         internal static void RemoveAdoption(int animalId, int clientId)
         {
-            db.Adoptions.DeleteOnSubmit(a);
-            db.SubmitChanges();
+            //db.Adoptions.DeleteOnSubmit(a);
+            //db.SubmitChanges();
         }
 
         // TODO: Shots Stuff
