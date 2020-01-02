@@ -312,8 +312,8 @@ namespace HumaneSociety
 
         internal static void RemoveAnimal(Animal animal)
         {
-            db.Animals.DeleteOnSubmit(animal);
-            db.SubmitChanges();
+                db.Animals.DeleteOnSubmit(animal);
+                db.SubmitChanges();
         }
 
         // TODO: Animal Multi-Trait Search
@@ -358,7 +358,7 @@ namespace HumaneSociety
         // TODO: Misc Animal Things
         internal static int GetCategoryId(string categoryName)
         {
-            Category category = db.Categories.Where(c => c.Name == categoryName).FirstOrDefault();
+            var category = db.Categories.Where(c => c.Name == categoryName).FirstOrDefault();
             return category.CategoryId;
         }
         
@@ -370,7 +370,7 @@ namespace HumaneSociety
         
         internal static int GetDietPlanId(string dietPlanName)
         {
-            DietPlan dietPlan = db.DietPlans.Where(d => d.Name == dietPlanName).FirstOrDefault();
+            var dietPlan = db.DietPlans.Where(d => d.Name == dietPlanName).FirstOrDefault();
             return dietPlan.DietPlanId;
         }
 
@@ -445,7 +445,8 @@ namespace HumaneSociety
         // TODO: Shots Stuff
         internal static IQueryable<AnimalShot> GetShots(Animal animal)
         {
-            throw new NotImplementedException();
+            var shot = db.AnimalShots.Where(x => x.AnimalId == animal.AnimalId);
+            return shot;
         }
 
         internal static void UpdateShot(string shotName, Animal animal)
