@@ -407,6 +407,24 @@ namespace HumaneSociety
             //add status to table
         }
 
+        internal static void DisplayAllCustomers()
+        {
+            var animals = db.Animals;
+            foreach (Animal animal in animals)
+            {
+                Console.WriteLine(animal.Name + " " + animal.Category + " " + animal.AnimalId);
+            }
+        }
+
+        internal static void DisplayAnimals()
+        {
+            var animals = db.Clients;
+            foreach (Client animal in animals)
+            {
+                Console.WriteLine(animal.FirstName + " " + animal.LastName + " " + animal.ClientId);
+            }
+        }
+
         internal static IQueryable<Adoption> GetPendingAdoptions()
         {
             IQueryable<Adoption> adoptions = db.Adoptions.Where(a => a.ApprovalStatus == "Pending");
@@ -439,7 +457,8 @@ namespace HumaneSociety
 
         internal static void RemoveAdoption(int animalId, int clientId)
         {
-            throw new NotImplementedException();
+            //db.Adoptions.DeleteOnSubmit(a);
+            //db.SubmitChanges();
         }
 
         // TODO: Shots Stuff
