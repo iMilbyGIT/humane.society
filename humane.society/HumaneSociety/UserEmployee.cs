@@ -270,7 +270,6 @@ namespace HumaneSociety
             try
             {
                 Console.Clear();
-
                 employee = Query.EmployeeLogin(userName, password);
                 UserInterface.DisplayUserOptions("Login successfull. Welcome.");
             }
