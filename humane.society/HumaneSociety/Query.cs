@@ -159,83 +159,197 @@ namespace HumaneSociety
 
             return employeeWithUserName == null;
         }
-        
-
         //// TODO Items: ////
-        
+        // CRUD - create(insert), read(select), update, delete
         // TODO: Allow any of the CRUD operations to occur here
         internal static void RunEmployeeQueries(Employee employee, string crudOperation)
         {
-            throw new NotImplementedException();
-        }
+            switch (crudOperation)
+            {
+                case "create":
+                db.Employees.InsertOnSubmit(employee);
+                db.SubmitChanges();
+                break;
+                case "read":                
+                var employeeTraits = db.Employees.Where(a => a.EmployeeNumber == employee.EmployeeNumber).First();
+                Console.WriteLine("Employee ID " + employeeTraits.EmployeeId + ' ' + "Employee Number " + employee.EmployeeNumber);
+                List<string> listOfTraits = new List<string>() { employeeTraits.FirstName, employeeTraits.LastName, employeeTraits.UserName, employeeTraits.Password, employeeTraits.Email };
+                UserInterface.DisplayUserOptions(listOfTraits);
+                Console.ReadLine();
+                break;
+                case "update":
+                employeeTraits = db.Employees.Where(a => a.EmployeeNumber == employee.EmployeeNumber).First();
+                GetUpdates(employeeTraits);
 
+                break;
+                case "delete":
+                employee = db.Employees.Where(e => e.LastName == employee.LastName && e.EmployeeNumber == employee.EmployeeNumber).SingleOrDefault();
+                db.Employees.DeleteOnSubmit(employee);
+                db.SubmitChanges();
+                break;
+            }
+        }
+        internal static void GetUpdates(Employee employee)
+        {
+            List<string> updtes = new List<string>();
+            UserInterface.DisplayUserOptions("What would you like to update use spaces!!");
+            
+            List<string> options = new List<string>() {"First Name ", "Last Name ", "User Name ", "Password ", "Employee Number ", "Email " };
+            UserInterface.DisplayUserOptions(options);
+
+            bool stillChosing = true;
+            while (stillChosing == true)
+            {
+                updtes.Add(Console.ReadLine());
+                Console.WriteLine("Want to continue? y/n");
+                string answer = Console.ReadLine();
+                if(answer == "n")
+                {
+                    stillChosing = false;
+                }
+            }
+            ApplyUpdates(updtes, employee);
+            
+        }
+        public static void ApplyUpdates(List<string> updates, Employee employee )
+        {
+            foreach(string update in updates)
+            {
+                switch (update)
+                {
+                    case "First Name":
+                    Console.WriteLine("What do you want to change the First Name to?");
+                    employee.FirstName = Console.ReadLine();
+                    db.SubmitChanges();
+                    break;
+
+                    case "Last Name":
+                    Console.WriteLine("What do you want to change the Last Name to?");
+                    employee.LastName = Console.ReadLine();
+                    db.SubmitChanges();
+                    break;
+                  
+                    case "User Name":
+                    Console.WriteLine("What do you want to change the User Name to?");
+                    employee.UserName = Console.ReadLine();
+                    db.SubmitChanges();
+                    break;
+
+                    case "Password":
+                    Console.WriteLine("What do you want to change the Password to?");
+                    employee.Password = Console.ReadLine();
+                    db.SubmitChanges();
+                    break;
+
+                    case "Employee Number":
+                    Console.WriteLine("What do you want to change the Employee Number to?");
+                    employee.EmployeeNumber = Int32.Parse(Console.ReadLine());
+                    db.SubmitChanges();
+                    break;
+
+                    case "Email":
+                    Console.WriteLine("What do you want to change the Email to?");
+                    employee.Email = Console.ReadLine();
+                    db.SubmitChanges();
+                    break;
+
+                    default:
+                    break;
+                }
+            }
+        }
         // TODO: Animal CRUD Operations
         internal static void AddAnimal(Animal animal)
         {
-            throw new NotImplementedException();
+            db.Animals.InsertOnSubmit(animal);
+            db.SubmitChanges();
         }
-
         internal static Animal GetAnimalByID(int id)
         {
-            throw new NotImplementedException();
+            Animal result = new Animal();
+            result = db.Animals.Where(a => a.AnimalId == id).FirstOrDefault();
+            return result;
         }
-
         internal static void UpdateAnimal(int animalId, Dictionary<int, string> updates)
-        {            
-            throw new NotImplementedException();
+        {
+            Animal animal = GetAnimalByID(animalId);
+            foreach (KeyValuePair<int,string> item in updates)
+            {
+                switch (item.Key)
+                {
+                    case 1:
+                    int cateID = db.Categories.Where(s => s.Name == item.Value).Single().CategoryId;                    
+                    animal.CategoryId = cateID;
+                    db.SubmitChanges();
+                    break;
+                    case 2:
+                    animal.Name = item.Value;
+                    db.SubmitChanges();
+                    break;
+                    case 3:
+                    animal.Age = Int32.Parse(item.Value);
+                    db.SubmitChanges();
+                    break;
+                    case 4:
+                    animal.Demeanor = item.Value;
+                    db.SubmitChanges();
+                    break;
+                    case 5:
+                    animal.KidFriendly = bool.Parse(item.Value);
+                    db.SubmitChanges();
+                    break;
+                    case 6:
+                    animal.PetFriendly = bool.Parse(item.Value);
+                    db.SubmitChanges();
+                    break;
+                    case 8:
+                    animal.Weight = Int32.Parse(item.Value);
+                    db.SubmitChanges();
+                    break;
+                }
+            }
         }
 
         internal static void RemoveAnimal(Animal animal)
         {
-            throw new NotImplementedException();
+                db.Animals.DeleteOnSubmit(animal);
+                db.SubmitChanges();
         }
-      
-        
+
         // TODO: Animal Multi-Trait Search
         internal static IQueryable<Animal> SearchForAnimalsByMultipleTraits(Dictionary<int, string> updates) // parameter(s)?
         {
-            IQueryable<Animal> results = db.Animals;
-            
+            var results = db.Animals.Select(a=>a);
             foreach (KeyValuePair<int, string> traits in updates)
-            {               
-                switch(traits.Key)
+            {
+                switch (traits.Key)
                 {
-                    
                     case 1:
-
-                        results = results.Where(a => a.Category.Name == traits.Value);
-                        break;
+                    results = results.Where(a => a.Category.Name == traits.Value).Select(a=>a);
+                    break;
                     case 2:
-                        results = results.Where(a => a.Name == traits.Value);
-
-                        break;
+                    results = results.Where(a => a.Name == traits.Value).Select(a=>a);
+                    break;
                     case 3:
-                        results = results.Where(a => a.Age == Int32.Parse(traits.Value));
-
-                        break;
+                    results = results.Where(a => a.Age == Int32.Parse(traits.Value));
+                    break;
                     case 4:
-                        results = results.Where(a => a.Demeanor == traits.Value);
-
-                        break;
+                    results = results.Where(a => a.Demeanor == traits.Value);
+                    break;
                     case 5:
-                        results = results.Where(a => a.KidFriendly == bool.Parse(traits.Value));
-
-                        break;
+                    results = results.Where(a => a.KidFriendly == bool.Parse(traits.Value));
+                    break;
                     case 6:
-                        results = results.Where(a => a.PetFriendly == bool.Parse(traits.Value));
-
-                        break;
+                    results = results.Where(a => a.PetFriendly == bool.Parse(traits.Value));
+                    break;
                     case 7:
-                        results = results.Where(a => a.Weight == Int32.Parse(traits.Value));
-
-                        break;
+                    results = results.Where(a => a.Weight == Int32.Parse(traits.Value));
+                    break;
                     case 8:
-                        results = results.Where(a => a.AnimalId == Int32.Parse(traits.Value));
-
-                        break;
+                    results = results.Where(a => a.AnimalId == Int32.Parse(traits.Value));
+                    break;
                     default:
-                        
-                        break;
+                    break;
                 }
             }
             return results;
@@ -244,18 +358,20 @@ namespace HumaneSociety
         // TODO: Misc Animal Things
         internal static int GetCategoryId(string categoryName)
         {
-            Category category = db.Categories.Where( c => c.Name == categoryName).FirstOrDefault() ;
+            var category = db.Categories.Where(c => c.Name == categoryName).FirstOrDefault();
             return category.CategoryId;
         }
         
         internal static Room GetRoom(int animalId)
         {
-            throw new NotImplementedException();
+            var rooms = db.Rooms.Where(r => r.AnimalId == animalId).FirstOrDefault();
+            return rooms;
         }
         
         internal static int GetDietPlanId(string dietPlanName)
         {
-            throw new NotImplementedException();
+            var dietPlan = db.DietPlans.Where(d => d.Name == dietPlanName).FirstOrDefault();
+            return dietPlan.DietPlanId;
         }
 
         // TODO: Adoption CRUD Operations
@@ -263,95 +379,74 @@ namespace HumaneSociety
         {
             UserInterface.DisplayUserOptions("Who will be adopting today?");
             DisplayAllCustomers();
-            UserInterface.DisplayUserOptions("Enter client Id ");
+            UserInterface.DisplayUserOptions("Enter client Id");
             int id = Int32.Parse(Console.ReadLine());
             Client personAdopting = db.Clients.Where(c => c.ClientId == id).FirstOrDefault();
-            // add clientId to the Adoptions table
+            //add clientId to the Adoptions table
             Console.Clear();
 
-            UserInterface.DisplayUserOptions("What Animal is being requested?");
+            UserInterface.DisplayUserOptions("What animal is being requested?");
             DisplayAnimals();
-            UserInterface.DisplayUserOptions("Enter animal Id ");
+            UserInterface.DisplayUserOptions("Enter animal Id");
             int animalId = Int32.Parse(Console.ReadLine());
-            Animal animalBingAdopted = GetAnimalByID(animalId);
-            //Add animalId to same table  
+            Animal animalBeingAdopted = GetAnimalByID(animalId);
+            //add animalId to same table
             Console.Clear();
 
             UserInterface.DisplayUserOptions("What is the adoption status (Approved, UnApproved or Pending)");
             string status = Console.ReadLine();
-            //add status to table 
+            //add status to table
 
-            UserInterface.DisplayUserOptions("What is the adoption fee?");
+            UserInterface.DisplayUserOptions("What is the adoption fee");
             int fee = Int32.Parse(Console.ReadLine());
             //add fee
 
-            UserInterface.DisplayUserOptions("Has this adoption breen paid for? (yes or no)");
+            UserInterface.DisplayUserOptions("Has this adoption been paid for? (yes or no)");
             string yesorno = Console.ReadLine();
-            bool payStatus = UserInterface.GetBitData(yesorno);          
+            bool payStatus = UserInterface.GetBitData(yesorno);
             //add status to table
-
-
-
-
-        }
-
-        internal static void DisplayAllCustomers()
-        {
-            var animals = db.Animals;
-            foreach (Animal animal in animals)
-            {
-                Console.WriteLine(animal.Name + " " + animal.Category + " " + animal.AnimalId);
-            }
-        }
-
-        internal static void DisplayAnimals()
-        {
-            var animals = db.Clients;
-            foreach (Client animal in animals)
-            {
-                Console.WriteLine(animal.FirstName + " " + animal.LastName + " " + animal.ClientId);
-            }
         }
 
         internal static IQueryable<Adoption> GetPendingAdoptions()
         {
-            IQueryable<Adoption> adoptions =  db.Adoptions.Where(a => a.ApprovalStatus == "Pending");
+            IQueryable<Adoption> adoptions = db.Adoptions.Where(a => a.ApprovalStatus == "Pending");
             return adoptions;
         }
 
         internal static void UpdateAdoption(bool isAdopted, Adoption adoption)
         {
-            throw new NotImplementedException();
+            var requiredData =
+             (from y in db.Adoptions
+              where y.ClientId == adoption.ClientId
+              select y).First();
+            var animal =
+                (from z in db.Animals
+                 where z.AnimalId == adoption.AnimalId
+                 select z).First();
+            if (isAdopted)
+            {
+                requiredData.ApprovalStatus = "Approved";
+                animal.AdoptionStatus = "Adopted";
+            }
+            else
+            {
+                requiredData.ApprovalStatus = "Denied";
+                animal.AdoptionStatus = "Animal is available for a different applicant.";
+            }
+
+            db.SubmitChanges();
         }
 
         internal static void RemoveAdoption(int animalId, int clientId)
         {
-            //db.Adoptions.DeleteOnSubmit(a);
-            //db.SubmitChanges();
+            throw new NotImplementedException();
         }
-        internal static void DisplayAllCustomers()
-        {
-            var animals = db.Animals;
-            foreach (Animal animal in animals)
-            {
-                Console.WriteLine(animal.Name + " " + animal.Category + " " + animal.AnimalId);
-            }
-        }
-        internal static void DisplayAnimals()
-        {
-            var animals = db.Clients;
-            foreach(Client animal in animals)
-            {
-                Console.WriteLine(animal.FirstName + " " + animal.LastName + " " + animal.ClientId);
-            }
-        }
-
 
         // TODO: Shots Stuff
         internal static IQueryable<AnimalShot> GetShots(Animal animal)
         {
-            IQueryable<AnimalShot> shots = db.AnimalShots;
-            return shots;
+            var shot = db.AnimalShots.Where(x => x.AnimalId == animal.AnimalId);
+            return shot;
         }
 
         internal static void UpdateShot(string shotName, Animal animal)
@@ -359,8 +454,7 @@ namespace HumaneSociety
             var updates = UserInterface.GetAnimalSearchCriteria();
             var animals = Query.SearchForAnimalsByMultipleTraits(updates).ToList();
 
-            UserInterface.DisplayUserOptions("What animal got a shot?");
-            while (animals.Count != 1)
+            while (animals.Count !=1)
             {
                 Console.Clear();
                 Console.WriteLine("You have to return a single animal");
@@ -369,25 +463,15 @@ namespace HumaneSociety
             }
             Animal pet = animals[0];
             List<Shot> Shots = db.Shots.ToList();
-            UserInterface.DisplayUserOptions("what shot do you need for this animal (Enter its name)");
-            foreach(Shot shot in Shots)
-            {                
+            UserInterface.DisplayUserOptions("What shot do you need for this animal? (Enter shot name)");
+            foreach (Shot shot in Shots)
+            {
                 UserInterface.DisplayUserOptions(shot.Name);
             }
             string answer = Console.ReadLine();
             Shot shotToUse = db.Shots.Where(s => s.Name == answer).FirstOrDefault();
             Console.Clear();
             UserInterface.DisplayUserOptions("Do you want to give " + pet.Name + " the " + shotToUse.Name + " shot ");
-            switch (answer)
-            {
-                case "yes":
-                    //add the shot and animal to junction tabel
-                    break;
-                case "no":
-                    //send them back to employee opstions
-                    break;
-
-            }
         }
     }
 }
